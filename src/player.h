@@ -9,8 +9,13 @@ class MusicPlayer{
 public:
     void run();
 private:
-    void displayMenu();
-    void handleInput();
+    enum Mode { NORMAL, INSERT};
+    Mode currentMode = NORMAL;
+
+    void drawBorder();
+    void displayInputSection();
+    void handleInsertmode();
+    void userInput();
 
     int total_height;
     int total_width;

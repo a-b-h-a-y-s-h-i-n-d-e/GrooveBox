@@ -4,13 +4,22 @@
 #include <string>
 
 void MusicPlayer::run(){
-    displayMenu();
-    handleInput();
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+    curs_set(0);
+
+    drawBorder();
+    displayInputSection();
+    userInput();
+
+    clear();
+    endwin();
 }
 
-void MusicPlayer::displayMenu(){
+void MusicPlayer::drawBorder(){
     clear();
-
     // Drawing borders
     border('|', '|', '-', '-', '-', '-', '-', '-');
     int height, width;
@@ -21,6 +30,11 @@ void MusicPlayer::displayMenu(){
     input_section_height = total_height * 0.2;
     display_section_height = total_height * 0.8;
     mvhline(display_section_height + 1, 0, '-', total_width);
+    refresh();
+
+}
+
+void MusicPlayer::displayInputSection(){
 
     // Drawing widgets now
     // input box
@@ -28,12 +42,31 @@ void MusicPlayer::displayMenu(){
     mvprintw(display_section_height + 2, 13, "[                                                  ]");
     mvprintw(display_section_height + 2, 68, "[ Search ]");
 
-
     refresh();
 }
 
+void MusicPlayer::userInput(){
+    char ch;
+    while(true){
+        ch = getch();
+        switch (ch){
+            case 'i':
+                handleInsertmode();
+                break;
+            
+            case 'q':
+                clear();
+                endwin();
+                exit(0);
+            
+            default:
+                break;
+        }
+    }
+}
 
-void MusicPlayer::handleInput(){
+
+void MusicPlayer::handleInsertmode(){
     std::string input;
     int ch;
     int cursor_pos = 0;
@@ -43,6 +76,7 @@ void MusicPlayer::handleInput(){
     refresh();
 
     while(true){
+
         ch = getch();
         if(ch == '\n')
             break;
@@ -60,7 +94,7 @@ void MusicPlayer::handleInput(){
             mvaddch(display_section_height + 2, 14 + cursor_pos, ch);
             cursor_pos++;
         }
-        
+
         refresh();
     }
 
