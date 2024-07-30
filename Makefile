@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall
-LIBS = -lncurses
+LIBS = -lncurses -lform
 
 SRC_DIR = src
 OBJ_DIR = obj

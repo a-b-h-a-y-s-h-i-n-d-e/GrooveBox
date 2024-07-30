@@ -11,7 +11,11 @@ public:
 private:
     void displayMenu();
     void handleInput();
-    void drawBorder();
+
+    int total_height;
+    int total_width;
+    int input_section_height;
+    int display_section_height;
 
     std::vector<std::string> playlist = {"Song1.mp3", "Song2.mp3"};
     int currentSelection = 0;
