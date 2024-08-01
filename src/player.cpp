@@ -2,14 +2,24 @@
 #include <ncurses.h>
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <unistd.h>
 
 void MusicPlayer::run(){
+
+    system("printf '\\e[8;24;80t'");
+    usleep(100000);
+
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
     curs_set(0);
 
+    resize_term(24, 80);
+    clear();
+    refresh();
+    
     drawBorder();
     displayInputSection();
     userInput();
@@ -47,21 +57,30 @@ void MusicPlayer::displayInputSection(){
 
 void MusicPlayer::userInput(){
     char ch;
+    currentMode = NORMAL;
+    displayMode();
+
     while(true){
         ch = getch();
         switch (ch){
             case 'i':
+                currentMode = INSERT;
+                displayMode();
                 handleInsertmode();
+                currentMode = NORMAL;
+                displayMode();
                 break;
             
             case 'q':
                 clear();
                 endwin();
                 exit(0);
+                break;
             
             default:
                 break;
         }
+        refresh();
     }
 }
 
@@ -71,6 +90,8 @@ void MusicPlayer::handleInsertmode(){
     int ch;
     int cursor_pos = 0;
     const int max_input_length = 50;
+
+    curs_set(1);
 
     move(display_section_height + 2, 14);
     refresh();
@@ -100,8 +121,18 @@ void MusicPlayer::handleInsertmode(){
 
     mvhline(display_section_height + 2, 14, ' ', max_input_length);
     mvprintw(1, 3, "%s", input.c_str());
+    curs_set(0);
     refresh();
 
-    getch();
+    
 
+}
+
+void MusicPlayer::displayMode(){
+    mvhline(display_section_height + 3, 2, ' ', 20);
+    if (currentMode == INSERT)
+        mvprintw(display_section_height + 3, 2, "[ INSERT MODE ]");
+    else
+        mvprintw(display_section_height + 3, 2, "[ NORMAL MODE ]");
+    refresh();
 }

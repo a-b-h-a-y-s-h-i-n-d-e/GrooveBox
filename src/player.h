@@ -16,6 +16,7 @@ private:
     void displayInputSection();
     void handleInsertmode();
     void userInput();
+    void displayMode();
 
     int total_height;
     int total_width;
