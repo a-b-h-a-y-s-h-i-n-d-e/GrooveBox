@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <unistd.h>
 
+
 void MusicPlayer::run(){
 
     system("printf '\\e[8;24;80t'");
@@ -93,6 +94,8 @@ void MusicPlayer::handleInsertmode(){
 
     curs_set(1);
 
+    mvhline(1, 3, ' ', 76);
+    mvhline(display_section_height + 2, 14, ' ', max_input_length);
     move(display_section_height + 2, 14);
     refresh();
 
@@ -118,13 +121,11 @@ void MusicPlayer::handleInsertmode(){
 
         refresh();
     }
-
-    mvhline(display_section_height + 2, 14, ' ', max_input_length);
-    mvprintw(1, 3, "%s", input.c_str());
     curs_set(0);
     refresh();
 
-    
+    std::string command = "python scripts/download_song.py \"" + input + "\"";
+    system(command.c_str());
 
 }
 
@@ -135,4 +136,4 @@ void MusicPlayer::displayMode(){
     else
         mvprintw(display_section_height + 3, 2, "[ NORMAL MODE ]");
     refresh();
-}
+}   
