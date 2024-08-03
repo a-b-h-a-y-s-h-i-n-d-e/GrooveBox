@@ -17,11 +17,13 @@ private:
     void handleInsertmode();
     void userInput();
     void displayMode();
+    void displaySongs();
 
     int total_height;
     int total_width;
     int input_section_height;
     int display_section_height;
+    std::vector<std::string> song_list;
 
     std::vector<std::string> playlist = {"Song1.mp3", "Song2.mp3"};
     int currentSelection = 0;

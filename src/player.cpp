@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdlib>
 #include <unistd.h>
+#include <filesystem>
 
 
 void MusicPlayer::run(){
@@ -70,6 +71,7 @@ void MusicPlayer::userInput(){
                 handleInsertmode();
                 currentMode = NORMAL;
                 displayMode();
+                displaySongs();
                 break;
             
             case 'q':
@@ -126,6 +128,22 @@ void MusicPlayer::handleInsertmode(){
 
     std::string command = "python scripts/download_song.py \"" + input + "\"";
     system(command.c_str());
+
+
+}
+
+void MusicPlayer::displaySongs(){
+    song_list.clear();
+    std::string path = "songs/";
+    int y = 2; // starting position to display song name
+
+    for(const auto &entry : std::filesystem::directory_iterator(path)){
+        std::string song_name = entry.path().filename().string();
+        song_list.push_back(song_name);
+        mvhline(y, 2, ' ', total_width - 3);
+        mvprintw(y++, 2, song_name.c_str());
+    }
+    refresh();
 
 }
 
