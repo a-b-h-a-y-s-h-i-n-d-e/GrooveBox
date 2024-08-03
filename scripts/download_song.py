@@ -4,22 +4,19 @@ import sys
 import os
 
 def download_song(song_name,song_name_mp4, url):
-    # directory = os.path.join(os.getcwd(), "songs")
-    directory = os.path.join(os.path.dirname(os.getcwd()), "songs")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    songs_dir = os.path.join(script_dir, "..", "songs")
 
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    file_name = os.path.join(directory, song_name_mp4)
-
+    file_name = os.path.join(songs_dir, song_name_mp4)
+    
     response = requests.get(url)
     if response.status_code == 200:
         with open(file_name, 'wb') as f:
             f.write(response.content)
-
-    os.chdir(directory)
-    input_file_name = song_name_mp4
+    
+    os.chdir(songs_dir)
     output_file_name = song_name + ".mp3"
-    os.rename(input_file_name, output_file_name)
+    os.rename(file_name, output_file_name)
     
 
 def fetch_data(song_name):
@@ -34,15 +31,24 @@ def fetch_data(song_name):
 
     song_name = song_name.replace(' ','')
     song_name_mp4 = song_name + ".mp4"
-    print(song_name_mp4)
     download_song(song_name, song_name_mp4, link_320kbps)
 
-    
+def clear_old_songs():
+    directory = os.path.join(os.getcwd(), "songs")
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            pass
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         song_name = sys.argv[1]
     else:
         pass
         # print("No song name provided!")
+    clear_old_songs()
     fetch_data(song_name)
     
