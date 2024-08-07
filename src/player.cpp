@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <filesystem>
 
+MusicPlayer::MusicPlayer() : symbol('>'), currentMode(NORMAL){
+    
+}
+
 
 void MusicPlayer::run(){
 
@@ -63,25 +67,34 @@ void MusicPlayer::userInput(){
     displayMode();
 
     while(true){
-        ch = getch();
-        switch (ch){
-            case 'i':
-                currentMode = INSERT;
-                displayMode();
-                handleInsertmode();
-                currentMode = NORMAL;
-                displayMode();
-                displaySongs();
-                break;
+        try{
+            ch = getch();
             
-            case 'q':
-                clear();
-                endwin();
-                exit(0);
-                break;
-            
-            default:
-                break;
+            switch (ch){
+                case 'i':
+                    currentMode = INSERT;
+                    displayMode();
+                    handleInsertmode();
+                    currentMode = NORMAL;
+                    displayMode();
+                    displaySongs();
+                    createSymbol();
+                    break;
+                
+                case 'q':
+                    clear();
+                    endwin();
+                    exit(0);
+                    break;
+
+                
+                
+                default:
+                    break;
+            }
+        }catch(const std::exception& e){
+            // do nothing
+            refresh();
         }
         refresh();
     }
@@ -132,8 +145,32 @@ void MusicPlayer::handleInsertmode(){
 
 }
 
+void MusicPlayer::createSymbol(){
+    int y = 2;
+    mvaddch(y, total_width - 5, symbol);
+    refresh();
+}
+void MusicPlayer::updateSymbol(){
+    if(symbol == '>'){
+        symbol = '=';
+        int y = 2;
+        mvhline(y, 2, ' ', total_width - 5);
+        mvaddch(y, total_width - 5, symbol);
+        refresh();
+    }
+    else{
+        symbol = '>';
+        int y = 2;
+        mvhline(y, 2, ' ', total_width - 5);
+        mvaddch(y, total_width - 5, symbol);
+        refresh();
+    }
+
+}
+
+
 void MusicPlayer::displaySongs(){
-    song_list.clear();
+    // song_list.clear();
     std::string path = "songs/";
     int y = 2; // starting position to display song name
 
