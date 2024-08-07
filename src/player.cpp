@@ -7,7 +7,7 @@
 #include <filesystem>
 
 MusicPlayer::MusicPlayer() : symbol('>'), currentMode(NORMAL){
-    
+
 }
 
 
@@ -154,14 +154,14 @@ void MusicPlayer::updateSymbol(){
     if(symbol == '>'){
         symbol = '=';
         int y = 2;
-        mvhline(y, 2, ' ', total_width - 5);
+        mvhline(y, total_width - 5, ' ', 1);
         mvaddch(y, total_width - 5, symbol);
         refresh();
     }
     else{
         symbol = '>';
         int y = 2;
-        mvhline(y, 2, ' ', total_width - 5);
+        mvhline(y, total_width - 5, ' ', 1);
         mvaddch(y, total_width - 5, symbol);
         refresh();
     }
