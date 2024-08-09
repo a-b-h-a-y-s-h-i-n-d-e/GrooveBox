@@ -2,22 +2,28 @@ import requests
 import json
 import sys
 import os
+import subprocess
 
-def download_song(song_name,song_name_mp4, url):
+
+def download_song(song_name, song_name_mp4, url):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     songs_dir = os.path.join(script_dir, "..", "songs")
 
     file_name = os.path.join(songs_dir, song_name_mp4)
-    
+
     response = requests.get(url)
     if response.status_code == 200:
         with open(file_name, 'wb') as f:
             f.write(response.content)
-    
-    os.chdir(songs_dir)
-    output_file_name = song_name + ".mp3"
-    os.rename(file_name, output_file_name)
-    
+
+
+    output_file_name = os.path.join(songs_dir, song_name + ".mp3")
+    conversion_command = f"ffmpeg -i \"{file_name}\" -q:a 0 -map a \"{output_file_name}\""
+    subprocess.run(conversion_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    os.remove(file_name)
+    return output_file_name
+
+
 
 def fetch_data(song_name):
     url = "https://saavn.dev/api/search/songs"
