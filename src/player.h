@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "audio_player.h"
 
 
 class MusicPlayer{
@@ -17,6 +18,8 @@ public:
     void displaySongs();
     void createSymbol();
     void updateSymbol();
+    void playSong(const std::string& songName);
+    void pauseSong();
 
 private:
     int total_height;
@@ -29,6 +32,7 @@ private:
     int currentSelection = 0;
     char symbol = '>';
     enum Mode { NORMAL, INSERT} currentMode;
+    AudioPlayer audioPlayer;
 };
 
 #endif

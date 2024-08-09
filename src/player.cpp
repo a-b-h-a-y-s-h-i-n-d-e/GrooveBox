@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <filesystem>
+#include "audio_player.h"
 
 MusicPlayer::MusicPlayer() : symbol('>'), currentMode(NORMAL){
 
@@ -65,6 +66,7 @@ void MusicPlayer::userInput(){
     char ch;
     currentMode = NORMAL;
     displayMode();
+    bool isPlaying = false;
 
     while(true){
         try{
@@ -87,10 +89,29 @@ void MusicPlayer::userInput(){
                     exit(0);
                     break;
 
+                case '\n':
+                    if(!song_list.empty()){
+                        if(isPlaying){
+                            pauseSong();
+                            isPlaying = false;
+                            updateSymbol();
+                        }else{
+                            updateSymbol();
+                            playSong(song_list[0]);
+                            isPlaying = true;
+                            
+                        }
+                    }   
+                    break;
                 
+                case 'n':
+                    mvprintw(display_section_height + 2, 68, "hehe");
+                    break;
+
                 
                 default:
                     break;
+
             }
         }catch(const std::exception& e){
             // do nothing
@@ -192,3 +213,22 @@ void MusicPlayer::displayMode(){
         mvprintw(display_section_height + 3, 2, "[ NORMAL MODE ]");
     refresh();
 }   
+
+void MusicPlayer::playSong(const std::string& songName){
+    std::string songPath = "songs/" + songName;
+    
+    if(audioPlayer.loadFile(songPath)){
+        audioPlayer.play();
+    }
+    else{
+        std::cerr << "Failed to play song: " << songName << std::endl;
+    }
+    refresh();
+}
+
+void MusicPlayer::pauseSong(){
+    if(audioPlayer.isPlaying()){
+        audioPlayer.pause();
+    }
+    refresh();
+}
