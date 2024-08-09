@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall
-LIBS = -lncurses -lform
+CXXFLAGS = -std=c++17 -Wall -I/usr/include/portaudio -I/usr/include
+LIBS = -lncurses -lform -lpulse -lpulse-simple -lsndfile
 
 SRC_DIR = src
 OBJ_DIR = obj
