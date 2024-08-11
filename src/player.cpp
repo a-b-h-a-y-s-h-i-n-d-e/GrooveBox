@@ -104,11 +104,6 @@ void MusicPlayer::userInput(){
                     }   
                     break;
                 
-                case 'n':
-                    mvprintw(display_section_height + 2, 68, "hehe");
-                    break;
-
-                
                 default:
                     break;
 
@@ -163,6 +158,9 @@ void MusicPlayer::handleInsertmode(){
     std::string command = "python scripts/download_song.py \"" + input + "\"";
     system(command.c_str());
 
+
+    mvhline(display_section_height + 2, 14, ' ', max_input_length);
+    refresh();
 
 }
 
